@@ -1,30 +1,31 @@
 *FX220,0
 DIMA%(10,10):MODE7:VDU23;8202;0;0;0;:SC%=0:PROCinstruct:MODE2:PROCsetup:ENVELOPE2,3,0,0,0,0,0,0,121,-10,-5,-2,120,120
-TIME=0:X%=500:Y%=500:Z%=0:G%=0:H%=5:V%=5:FORI%=1TO10:FORG%=1TO10:A%(G%,I%)=RND(3):Z%=Z%+A%(G%,I%):NEXT:NEXT
+g%=0:p%=0:TIME=0:X%=500:Y%=500:Z%=0:G%=0:H%=5:V%=5:FORI%=1TO10:FORG%=1TO10:A%(G%,I%)=RND(4)-1:Z%=Z%+A%(G%,I%):NEXT:NEXT:P%=400
 VDU23;8202;0;0;0;19,0,1;0;19,8,7;0;19,1,7;0;19,12,4;0;19,11,3;0;19,2,3;0;19,10,2;0;19,14,3;0;19,1,0;0;
 *FX11,1
 *FX12,1
-REPEAT:CLS:COLOUR128:VDU19,15,4;0;:VDU19,9,6;0;:VDU19,14,0;0;:x%=500:y%=700:Move=0:IFRND(5)=1monster=TRUE ELSEmonster=FALSE
+REPEAT:CLS:COLOUR128:VDU19,15,4;0;:VDU19,9,6;0;:VDU19,14,0;0;:x%=500:y%=700:Move=0:IFRND(4)=1monster=TRUE ELSEmonster=FALSE
 IFmonster=TRUE PROCmonster(x%,y%)
 IFV%>1ANDV%<10ANDH%>1ANDH%<10A%=1ELSEIFV%>1ANDV%<10ANDH%=1A%=2ELSEIFV%>1ANDV%<10ANDH%=10A%=4ELSEIFV%=10ANDH%>1ANDH%<10A%=3ELSEIFV%=1ANDH%>1ANDH%<10A%=5ELSEIFV%=10ANDH%=1A%=6ELSEIFV%=10ANDH%=10A%=7ELSEIFV%=1ANDH%=10A%=8
 IFV%=1ANDH%=1A%=9
 PROCroom(A%):VDU4:COLOUR138:PRINT"SCORE:";SC%;TAB(0,1);"HI:";HI%:VDU5:MOVEX%,Y%:VDU18,3,15,250,251,8,8,10,252,253,8,8,10,254,255,18,3,6,8,8,11,11,244,245,8,8,10,246,247,8,8,10,248,249,18,3,14,8,8,11,240,241,8,8,10,10,242,243,18,3,3,8,8
 VDU11,11,11,236,237,8,8,10,238,239
-REPEAT:D%=0:T%=0
-IFINKEY(-58) PROCup:GOTO 180
-IFINKEY(-42) PROCdown:GOTO 180
-IFINKEY(-26) PROCleft:GOTO 180
-IFINKEY(-122) PROCright:GOTO 180
- IF D%=0 AND T%=0 THEN GOTO 210
-PROCrobot(X%,Y%):PROCrobot(X%+D%,Y%+T%):X%=X%+D%:Y%=Y%+T%
-PRINTTAB(0,0)"SCORE:";SC%
-IFNOTmonster GOTO290
+GCOL0,0:PLOT4,70,900:PLOT5,100,900:PLOT4,70,500:PLOT5,100,500:VDU4:FORI=1TO5:PRINTTAB(1,5+I)MID$("POWER",I,1):NEXT:GCOL3,7:FORI=500TO500+P%STEP4:PLOT4,20,I:PLOT5,60,I:NEXT
+REPEAT:D%=0:T%=0:g%=G%:p%=p%+1
+IFINKEY(-58) PROCup:GOTO 190
+IFINKEY(-42) PROCdown:GOTO 190
+IFINKEY(-26) PROCleft:GOTO 190
+IFINKEY(-122) PROCright:GOTO 190
+IFD%=0ANDT%=0GOTO210
+SOUND1,-10,128,2:PROCrobot(X%,Y%):PROCrobot(X%+D%,Y%+T%):X%=X%+D%:Y%=Y%+T%:IFg%<>G%P%=P%+40:GCOL3,7:FORI=500+P%-36TO500+P%STEP4:PLOT4,20,I:PLOT5,60,I:NEXT:IFP%>400death=TRUE
+PRINTTAB(0,0)"SCORE:";SC%:IFp%>8p%=0:GCOL3,7:PLOT4,20,500+P%:PLOT5,60,500+P%:P%=P%-4:IFP%<=0death=TRUE
+IFNOTmonster GOTO300
 OK=FALSE:A%=RND(20)-10:B%=RND(20)-10:IFB%>5B%=20ELSEIFB%<-5B%=-20ELSEB%=0
 IFA%>5A%=20ELSEIFA%<-5A%=-20ELSEA%=0
-IFA%=-20ANDPOINT(x%-14,y%)=0AND POINT(x%-14,y%-80)=0 OK=TRUE:B%=0:GOTO280
-IFB%=-20ANDPOINT(x%,y%-120)=0ANDPOINT(x%+100,y%-120)=0 OK=TRUE:A%=0:GOTO280
-IFA%=20ANDPOINT(x%+180,y%)=0ANDPOINT(x%+180,y%-100)=0 OK=TRUE:B%=0:GOTO280
-IFB%=20ANDPOINT(x%,y%+50)=0ANDPOINT(x%+100,y%+50)=0 OK=TRUE:A%=0:GOTO280
+IFA%=-20ANDPOINT(x%-14,y%)=0AND POINT(x%-14,y%-80)=0 OK=TRUE:B%=0:GOTO290
+IFB%=-20ANDPOINT(x%,y%-120)=0ANDPOINT(x%+100,y%-120)=0 OK=TRUE:A%=0:GOTO290
+IFA%=20ANDPOINT(x%+180,y%)=0ANDPOINT(x%+180,y%-100)=0 OK=TRUE:B%=0:GOTO290
+IFB%=20ANDPOINT(x%,y%+50)=0ANDPOINT(x%+100,y%+50)=0 OK=TRUE:A%=0:GOTO290
 IFOK=TRUE PROCmonster(x%,y%):x%=x%+A%:y%=y%+B%:PROCmonster(x%,y%)
 UNTILMove<>0ORdeath=TRUE ORG%=Z%
 COLOUR128
@@ -64,9 +65,13 @@ ENDPROC
 DEF PROCinstruct
 PRINT'';TAB(8)CHR$141;CHR$129;"ROBO";'TAB(9)CHR$141;"ROBO"
 PRINT'TAB(5)CHR$131;"by Ian Grimstead"
-PRINT''"    You control ROBO-1,a robotic          breakthrough in the third computer      age,to find all the gold that some      aliens have taken from the national     secuirity centre,and have scatered      it around their main base."
- PRINT"    But beware,it is guarded by a ghost   called 'The Watcher',if he catches you  ROBO-1's power cells will be drained,   and he will short-circuit."
-PRINT'"    The cursor keys control his            movement, to pick up gold you                just steer into it."'';CHR$136;CHR$130;"   Press <space-bar> to start":REPEATUNTILGET=32
+PRINT'"    You control ROBO-1,a robotic          breakthrough in the third computer      age,to find all the gold that some      aliens have taken from the national     secuirity centre,and have scatered      it around their main base."
+PRINT"    Watch your power,not too much and     not too little! Also,beware.It is       guarded by a ghost called               'The Watcher',if he catches you         ROBO-1's power cells will be drained,   and he will short-circuit."
+PRINT'"    The cursor keys control his            movement, to pick up gold you                just steer into it."';CHR$136;CHR$130;"   Press <space-bar>"
+REPEATUNTILGET=32
+REPEAT:READA,B:SOUND1,-15,A,B:SOUND1,0,0,1
+UNTILA=0ANDB=0
+DATA5,40,33,40,53,40,69,5,65,40,61,7,69,8,73,40,81,20,73,10,73,10,0,0
 ENDPROC
 DEF PROCend:VDU23;8202;0;0;0;
 *FX21
