@@ -7,6 +7,8 @@ Date | November 1984
 Page | 184
 Author | Ian Grimstead
 
+![Robo-1 screenshot](Robo-1.png)
+
 ## Notes
 
 Game line numbers stripped to enable [jsbeeb](https://github.com/mattgodbolt/jsbeeb) to autorun - you'll need to:
